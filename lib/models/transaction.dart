@@ -5,6 +5,7 @@ class Transaction {
   final double amount;
   final String category;
   final bool isManual;
+  final String? source;
 
   Transaction({
     this.id,
@@ -13,6 +14,7 @@ class Transaction {
     required this.amount,
     required this.category,
     this.isManual = false,
+    this.source,
   });
 
   Map<String, dynamic> toMap() => {
@@ -22,14 +24,16 @@ class Transaction {
         'amount': amount,
         'category': category,
         'isManual': isManual ? 1 : 0,
+        'source': source,
       };
 
   factory Transaction.fromMap(Map<String, dynamic> map) => Transaction(
-        id: map['id'],
+        id: map['id'] as int?,
         date: DateTime.parse(map['date']),
         description: map['description'],
-        amount: map['amount'],
+        amount: (map['amount'] as num).toDouble(),
         category: map['category'],
         isManual: map['isManual'] == 1,
+        source: map['source'],
       );
 }
