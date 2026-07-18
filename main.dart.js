@@ -8413,7 +8413,7 @@ A.ky("URL PROXY:")
 A.ky(u.m)
 p=A.js(u.m)
 o=t.N
-n=A.aE(["Content-Type","application/json","X-App-Secret","xK9mP2vQ8rL5nT3wZ7yB1cF6hJ4sA0dE"],o,o)
+n=A.aE(["Content-Type","application/json","X-App-Secret","mR7xQ2wL9pT4vK8zN3hB6fD1sC5yA0eJ"],o,o)
 s=3
 return A.Q(A.b62(p,B.d3.XN(A.aE(["contents",A.b([A.aE(["parts",A.b([A.aE(["text",'\nSei un assistente finanziario.\n\nAnalizza questo estratto conto bancario.\n\nEstrai tutti i movimenti e restituisci SOLO JSON valido.\n\nFormato:\n\n[\n {\n  "description":"descrizione movimento",\n  "amount":-25.50,\n  "date":"2026-01-15",\n  "category":"Salute"\n }\n]\n\n\nCategorie disponibili per le SPESE (usa esattamente questi nomi):\n\n'+k+"\n\n\nCategorie disponibili per le ENTRATE (usa esattamente questi nomi):\n\n"+j+"\n\n\nRegole:\n\n- spese negative\n- entrate positive\n- data formato YYYY-MM-DD\n- usa SOLO le categorie elencate sopra, esattamente come scritte\n- nessun testo fuori dal JSON\n\n\nEstratto conto:\n\n"+a+"\n\n"],o,o)],t.m0)],o,t.xW)],t.Ud),"generationConfig",A.aE(["temperature",0.1],o,t.i)],o,t.K),null),n),$async$acf)
 case 3:m=c
