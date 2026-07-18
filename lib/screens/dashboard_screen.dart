@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/transaction_provider.dart';
 import '../theme/app_theme.dart';
 import '../utils/category_icons.dart';
+import '../widgets/period_filter_bar.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -20,6 +21,8 @@ class DashboardScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
           children: [
+            const PeriodFilterBar(),
+            const SizedBox(height: 16),
             _BalanceCard(balance: provider.balance),
             const SizedBox(height: 16),
             Row(

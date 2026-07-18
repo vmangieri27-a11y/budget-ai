@@ -165,20 +165,34 @@ class _ImportScreenState extends State<ImportScreen> {
         );
 
 
-
-    for(final t in transactions){
-
-
-      await provider.addTransaction(t);
-
-
-    }
-
-
+    final summary =
+        await provider.importStatement(transactions);
 
 
     if(!mounted)return;
 
+
+    final parts = <String>[
+      "${summary.imported} movimenti importati",
+    ];
+
+    if (summary.oldImportedReplaced > 0) {
+      parts.add(
+        "${summary.oldImportedReplaced} vecchi movimenti sostituiti",
+      );
+    }
+
+    if (summary.manualRemoved > 0) {
+      parts.add(
+        "${summary.manualRemoved} movimenti manuali duplicati rimossi",
+      );
+    }
+
+    if (summary.duplicatesSkipped > 0) {
+      parts.add(
+        "${summary.duplicatesSkipped} doppioni nel file ignorati",
+      );
+    }
 
 
     ScaffoldMessenger.of(context)
@@ -187,7 +201,7 @@ class _ImportScreenState extends State<ImportScreen> {
       SnackBar(
 
         content: Text(
-          "${transactions.length} movimenti importati"
+          parts.join(" · ")
         ),
 
       ),

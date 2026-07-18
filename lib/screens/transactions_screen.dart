@@ -4,6 +4,7 @@ import '../providers/transaction_provider.dart';
 import '../models/transaction.dart' as model;
 import '../theme/app_theme.dart';
 import '../utils/category_icons.dart';
+import '../widgets/period_filter_bar.dart';
 
 enum _Filter { tutti, entrate, uscite }
 
@@ -16,16 +17,22 @@ class TransactionsScreen extends StatefulWidget {
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
   _Filter _filter = _Filter.tutti;
+  String? _selectedCategory;
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TransactionProvider>();
-    var transactions = provider.transactions;
+    var transactions = provider.transactionsForPeriod;
 
     if (_filter == _Filter.entrate) {
       transactions = transactions.where((t) => t.amount > 0).toList();
     } else if (_filter == _Filter.uscite) {
       transactions = transactions.where((t) => t.amount < 0).toList();
+    }
+
+    if (_selectedCategory != null) {
+      transactions =
+          transactions.where((t) => t.category == _selectedCategory).toList();
     }
 
     return Scaffold(
@@ -49,15 +56,48 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           ),
         ],
       ),
-      body: provider.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : transactions.isEmpty
-              ? const Center(child: Text('Nessuna transazione', style: TextStyle(color: AppColors.grey)))
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
-                  itemCount: transactions.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const PeriodFilterBar(),
+                const SizedBox(height: 10),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String?>(
+                    value: _selectedCategory,
+                    hint: const Text('Tutte le categorie'),
+                    isExpanded: true,
+                    borderRadius: BorderRadius.circular(14),
+                    items: [
+                      const DropdownMenuItem<String?>(
+                        value: null,
+                        child: Text('Tutte le categorie'),
+                      ),
+                      ...categories.map(
+                        (c) => DropdownMenuItem<String?>(value: c, child: Text(c)),
+                      ),
+                    ],
+                    onChanged: (value) => setState(() => _selectedCategory = value),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: provider.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : transactions.isEmpty
+                    ? const Center(
+                        child: Text('Nessuna transazione',
+                            style: TextStyle(color: AppColors.grey)))
+                    : ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+                        itemCount: transactions.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 10),
+                        itemBuilder: (context, index) {
                     final t = transactions[index];
                     final isExpense = t.amount < 0;
                     return Container(
@@ -107,7 +147,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ),
                     );
                   },
-                ),
+                      ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddDialog(context),
         child: const Icon(Icons.add),
